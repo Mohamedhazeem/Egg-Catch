@@ -4,48 +4,94 @@ using DG.Tweening;
 
 public class FallingObject : MonoBehaviour
 {
-    public CatchPosition fallLane;
+    [Header("Fall Settings")]
+    public CatchLane fallLane;
     public float fallSpeed = 3f;
     public float despawnY = -6f;
+    [Header("Bomb")]
+    public bool isBomb;
+    [Header("Catch Settings")]
+    private bool isCaught = false;
+    private Transform targetCatchPoint;
+
+    [Header("Animation")]
     public bool isAnimate = false;
+    public float maximumRotationAngle = 360f, duration = 1f;
+    public Ease animationEasing = Ease.Linear;
+    public LoopType loopType = LoopType.Incremental;
 
     private Tween rotationTween;
     void OnEnable()
     {
         if (isAnimate)
         {
-            // Rotate continuously on a random axis
             Vector3 randomAxis = Random.onUnitSphere;
-            rotationTween = transform.DORotate(randomAxis * 360f, 1f, RotateMode.FastBeyond360)
-                                    .SetEase(Ease.Linear)
-                                    .SetLoops(-1, LoopType.Incremental);
+            rotationTween = transform.DORotate(randomAxis * maximumRotationAngle, duration, RotateMode.FastBeyond360)
+                                    .SetEase(animationEasing)
+                                    .SetLoops(-1, loopType);
+        }
+    }
+    private void Update()
+    {
+        if (!isCaught)
+        {
+            // Falling
+            transform.position += Vector3.down * fallSpeed * Time.deltaTime;
+
+            if (transform.position.y < despawnY)
+            {
+                DespawnSelf();
+            }
         }
     }
 
-    void Update()
+    private void OnCaught()
     {
-        transform.position += Vector3.down * fallSpeed * Time.deltaTime;
+        if (isBomb)
+            Debug.Log("Bomb caught");
+        else
+            Debug.Log("Egg caught");
 
-        if (transform.position.y < despawnY)
-        {
-            DespawnSelf();
-        }
+        LeanPool.Despawn(gameObject);
     }
 
     public void DespawnSelf()
     {
-        LeanPool.Despawn(gameObject); // Clean and pooled
+        LeanPool.Despawn(gameObject);
     }
 
-    void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Catcher"))
+        if (isCaught) return;
+        if (other.CompareTag("CatchZone"))
         {
-            DespawnSelf();
+            var catcher = other.GetComponentInParent<CatcherController>();
+            if (catcher != null && catcher.GetCurrentLane() == fallLane)
+            {
+                print("Caught by player");
+                isCaught = true;
+                targetCatchPoint = catcher.CatchPoint;
+
+                // Start smooth move with rotation
+                transform
+                    .DOMove(targetCatchPoint.position, 0.3f) // move in 0.3s
+                    .SetEase(Ease.InOutSine)
+                    .OnComplete(OnCaught);
+
+                // Optional: Rotate slightly toward catch direction
+                // Vector3 tilt = GetTiltByLane(fallLane);
+                // transform
+                //     .DORotate(tilt, 0.35f)
+                //     .SetEase(Ease.InOutSine);
+            }
         }
     }
+
+
     void OnDisable()
     {
         rotationTween?.Kill();
+        isCaught = false;
+        targetCatchPoint = null;
     }
 }

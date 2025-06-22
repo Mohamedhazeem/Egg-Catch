@@ -10,7 +10,7 @@ public class FallingObjectSpawner : MonoBehaviour
     public GameObject bombPrefab;
 
     [Header("Spawn Behavior Settings")]
-    // [Tooltip("Start allowing 2-lane spawns after this many eggs have been spawned")]
+    [Tooltip("Start allowing 2-lane spawns after this many eggs have been spawned")]
     [SerializeField]
     private int enableMultiLaneSpawnAfter = 60;
     [SerializeField] private float multiLaneChanceMin = 0.2f;
@@ -41,7 +41,7 @@ public class FallingObjectSpawner : MonoBehaviour
         while (eggsSpawned < totalEggs)
         {
             int spawnsThisRound = DetermineSpawnCount();
-            List<CatchPosition> chosenLanes = PickUniqueLanes(spawnsThisRound);
+            List<CatchLane> chosenLanes = PickUniqueLanes(spawnsThisRound);
 
             foreach (var lane in chosenLanes)
             {
@@ -76,10 +76,10 @@ public class FallingObjectSpawner : MonoBehaviour
     }
 
 
-    List<CatchPosition> PickUniqueLanes(int count)
+    List<CatchLane> PickUniqueLanes(int count)
     {
-        var all = new List<CatchPosition> { CatchPosition.Left, CatchPosition.Middle, CatchPosition.Right };
-        var result = new List<CatchPosition>();
+        var all = new List<CatchLane> { CatchLane.Left, CatchLane.Middle, CatchLane.Right };
+        var result = new List<CatchLane>();
 
         for (int i = 0; i < count; i++)
         {
@@ -105,15 +105,15 @@ public class FallingObjectSpawnSet
     public Transform middle;
     public Transform right;
 
-    public Transform GetLane(CatchPosition lane)
+    public Transform GetLane(CatchLane lane)
     {
         switch (lane)
         {
-            case CatchPosition.Left: return left;
-            case CatchPosition.Middle: return middle;
-            case CatchPosition.Right: return right;
+            case CatchLane.Left: return left;
+            case CatchLane.Middle: return middle;
+            case CatchLane.Right: return right;
             default: return middle;
         }
     }
 }
-public enum CatchPosition { Left, Middle, Right }
+public enum CatchLane { None, Left, Middle, Right }

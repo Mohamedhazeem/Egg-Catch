@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Lean.Pool;
@@ -30,7 +31,7 @@ public class FallingObjectSpawner : MonoBehaviour
 
     public int totalEggs = 100;
     private int eggsSpawned = 0;
-
+    public static event Action<CatchLane, bool> OnObjectSpawned;
     void Start()
     {
         StartCoroutine(SpawnRoutine());
@@ -42,29 +43,47 @@ public class FallingObjectSpawner : MonoBehaviour
         {
             int spawnsThisRound = DetermineSpawnCount();
             List<CatchLane> chosenLanes = PickUniqueLanes(spawnsThisRound);
+            bool hasSpawnedEgg = false;
 
             foreach (var lane in chosenLanes)
             {
-                float currentBombChance = GetScaledValue(bombSpawnChanceMin, bombSpawnChanceMax);
-                bool spawnBomb = eggsSpawned > startSpawningBombsAfter && Random.value < currentBombChance;
-                GameObject prefab = spawnBomb ? bombPrefab : eggPrefab;
+                bool isBomb = false;
+                if (!hasSpawnedEgg && eggsSpawned > startSpawningBombsAfter)
+                {
+                    float bombChance = GetScaledValue(bombSpawnChanceMin, bombSpawnChanceMax);
+                    isBomb = UnityEngine.Random.value < bombChance;
+                }
+                else
+                {
+                    isBomb = true;
+                }
+
+                if (eggsSpawned <= startSpawningBombsAfter)
+                    isBomb = false;
+
+                GameObject prefab = isBomb ? bombPrefab : eggPrefab;
+                OnObjectSpawned?.Invoke(lane, isBomb);
 
                 foreach (var spawnSet in fallingObjectSpawnSets)
                 {
                     Transform spawnPoint = spawnSet.GetLane(lane);
                     GameObject obj = LeanPool.Spawn(prefab, spawnPoint.position, Quaternion.identity);
-                    if (obj.TryGetComponent<FallingObject>(out var egg))
-                        egg.fallLane = lane;
+                    if (obj.TryGetComponent<FallingObject>(out var falling))
+                        falling.fallLane = lane;
                 }
 
-                if (!spawnBomb) eggsSpawned++;
+                if (!isBomb)
+                {
+                    eggsSpawned++;
+                    hasSpawnedEgg = true;
+                }
             }
 
             float delay = GetScaledValue(spawnDelayStart, spawnDelayEnd);
             yield return new WaitForSeconds(delay);
-
         }
     }
+
     private int DetermineSpawnCount()
     {
         float currentMultiLaneChance = GetScaledValue(multiLaneChanceMin, multiLaneChanceMax);
@@ -72,7 +91,7 @@ public class FallingObjectSpawner : MonoBehaviour
         if (eggsSpawned < enableMultiLaneSpawnAfter)
             return 1;
         else
-            return Random.value < currentMultiLaneChance ? 2 : 1;
+            return UnityEngine.Random.value < currentMultiLaneChance ? 2 : 1;
     }
 
 
@@ -83,7 +102,7 @@ public class FallingObjectSpawner : MonoBehaviour
 
         for (int i = 0; i < count; i++)
         {
-            int index = Random.Range(0, all.Count);
+            int index = UnityEngine.Random.Range(0, all.Count);
             result.Add(all[index]);
             all.RemoveAt(index);
         }

@@ -21,6 +21,7 @@ public class CatcherController : MonoBehaviour
         if (input == null) return;
 
         CatchLane newLane = input.GetLaneInput();
+        animator.SetFloat("LeanDirection", GetLeanValue(newLane), 0.1f, Time.deltaTime);
         if (newLane != currentLane && newLane != default)
         {
             MoveToLane(newLane);
@@ -31,7 +32,11 @@ public class CatcherController : MonoBehaviour
     {
         currentLane = lane;
         print($"lane in catch controller {lane}");
-        // animator.SetTrigger(lane.ToString());
+    }
+    private float GetLeanValue(CatchLane lane)
+    {
+        return lane == CatchLane.Left ? -1f :
+               lane == CatchLane.Right ? 1f : 0f;
     }
 
     public CatchLane GetCurrentLane() => currentLane;

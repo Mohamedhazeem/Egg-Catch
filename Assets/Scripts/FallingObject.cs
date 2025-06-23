@@ -38,7 +38,6 @@ public class FallingObject : MonoBehaviour
     {
         if (!isCaught)
         {
-            // Falling
             transform.position += Vector3.down * fallSpeed * Time.deltaTime;
 
             if (transform.position.y < despawnY)
@@ -48,12 +47,13 @@ public class FallingObject : MonoBehaviour
         }
     }
 
-    private void OnCaught()
+    private void OnCaught(ICatch catchController)
     {
         if (isBomb)
-            Debug.Log("Bomb caught");
+            ScoreManager.Instance.SubtractScore(catchController.GetPlayerId(), 5);
         else
-            Debug.Log("Egg caught");
+            ScoreManager.Instance.AddScore(catchController.GetPlayerId(), 1);
+        print("called");
 
         LeanPool.Despawn(gameObject);
     }
@@ -68,16 +68,16 @@ public class FallingObject : MonoBehaviour
         if (isCaught) return;
         if (other.CompareTag("CatchZone"))
         {
-            var catcher = other.GetComponentInParent<CatcherController>();
+            var catcher = other.GetComponentInParent<ICatch>();
             if (catcher != null && catcher.GetCurrentLane() == fallLane)
             {
                 print("Caught by player");
                 isCaught = true;
-                targetCatchPoint = catcher.CatchPoint;
+                targetCatchPoint = catcher.CatchPoint();
                 transform
                     .DOMove(targetCatchPoint.position, catchMoveDuration)
                     .SetEase(catchEasing)
-                    .OnComplete(OnCaught);
+                    .OnComplete(() => OnCaught(catcher));
             }
         }
     }

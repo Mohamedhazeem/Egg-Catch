@@ -122,7 +122,9 @@ MonoBehaviour:
   fallLane: 0
   fallSpeed: 4.5
   despawnY: -6
-  isBomb: 0
+  isBomb: 1
+  catchMoveDuration: 0.3
+  catchEasing: 4
   isAnimate: 0
   maximumRotationAngle: 360
   duration: 1

@@ -11,6 +11,9 @@ public class FallingObject : MonoBehaviour
     [Header("Bomb")]
     public bool isBomb;
     [Header("Catch Settings")]
+    [SerializeField, Tooltip("Time it takes for the object to move to the catcher after being caught")]
+    private float catchMoveDuration = 0.3f;
+    public Ease catchEasing = Ease.InOutSine;
     private bool isCaught = false;
     private Transform targetCatchPoint;
 
@@ -71,18 +74,10 @@ public class FallingObject : MonoBehaviour
                 print("Caught by player");
                 isCaught = true;
                 targetCatchPoint = catcher.CatchPoint;
-
-                // Start smooth move with rotation
                 transform
-                    .DOMove(targetCatchPoint.position, 0.3f) // move in 0.3s
-                    .SetEase(Ease.InOutSine)
+                    .DOMove(targetCatchPoint.position, catchMoveDuration)
+                    .SetEase(catchEasing)
                     .OnComplete(OnCaught);
-
-                // Optional: Rotate slightly toward catch direction
-                // Vector3 tilt = GetTiltByLane(fallLane);
-                // transform
-                //     .DORotate(tilt, 0.35f)
-                //     .SetEase(Ease.InOutSine);
             }
         }
     }

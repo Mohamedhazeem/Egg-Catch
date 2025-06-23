@@ -7,21 +7,21 @@ public class CatcherController : MonoBehaviour
     [SerializeField] private Transform catchPoint; // Reference to CatchPoint near stomach in Pokenman
 
     private CatchLane currentLane = CatchLane.Middle;
-    private ICatchInput input;
+    private ICatchInput input; ICatchAnimation catchAnimation;
     private Animator animator;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
         input = GetComponent<ICatchInput>();
+        catchAnimation = GetComponent<ICatchAnimation>();
     }
-
     private void Update()
     {
         if (input == null) return;
 
         CatchLane newLane = input.GetLaneInput();
-        animator.SetFloat("LeanDirection", GetLeanValue(newLane), 0.1f, Time.deltaTime);
+        catchAnimation.SetLean(newLane);
         if (newLane != currentLane && newLane != default)
         {
             MoveToLane(newLane);
@@ -32,11 +32,6 @@ public class CatcherController : MonoBehaviour
     {
         currentLane = lane;
         print($"lane in catch controller {lane}");
-    }
-    private float GetLeanValue(CatchLane lane)
-    {
-        return lane == CatchLane.Left ? -1f :
-               lane == CatchLane.Right ? 1f : 0f;
     }
 
     public CatchLane GetCurrentLane() => currentLane;

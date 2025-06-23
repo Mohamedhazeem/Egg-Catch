@@ -31,6 +31,4 @@ public class AICatchInput : MonoBehaviour, ICatchInput
 
         return currentLane;
     }
-
-    public bool IsTryingToCatch() => true;
 }

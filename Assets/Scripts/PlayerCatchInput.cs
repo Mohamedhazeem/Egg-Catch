@@ -14,9 +14,4 @@ public class PlayerCatchInput : MonoBehaviour, ICatchInput
             currentLane = CatchLane.Right;
         return currentLane;
     }
-
-    public bool IsTryingToCatch()
-    {
-        return Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D);
-    }
 }

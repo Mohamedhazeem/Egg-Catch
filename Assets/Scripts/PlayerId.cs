@@ -1,11 +1,11 @@
 public enum PlayerId
 {
-    Player1,
-    Player2,
-    Player3,
-    Player4,
-    AI1,
-    AI2,
-    AI3,
-    AI4
+    Player_1,
+    Player_2,
+    Player_3,
+    Player_4,
+    AI_1,
+    AI_2,
+    AI_3,
+    AI_4
 }

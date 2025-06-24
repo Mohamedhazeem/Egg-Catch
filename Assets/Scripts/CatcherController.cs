@@ -19,6 +19,7 @@ public class CatcherController : MonoBehaviour, ICatch
     }
     void Start()
     {
+        scoreUI.SetPlayerName(playerId.ToString());
         ScoreManager.Instance.RegisterPlayer(playerId, scoreUI.UpdateScoreText);
     }
     private void Update()

@@ -9,6 +9,7 @@ public interface IScore
 }
 public interface IPlayerScoreUI : IUIElement
 {
+    void SetPlayerName(string name);
     void UpdateScoreText(string value);
 }
 public interface IRemainingFallingObjectCounterUI : IUIElement

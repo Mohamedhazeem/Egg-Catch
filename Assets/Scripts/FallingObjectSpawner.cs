@@ -30,7 +30,11 @@ public class FallingObjectSpawner : MonoBehaviour
     [SerializeField, Tooltip("Delay between spawns near the end of the game (harder phase)")]
     private float spawnDelayEnd = 0.3f;
 
+
+    [Header("Falling Objects Setting")]
     public int totalFallingObjectsToSpawn = 100;
+    [SerializeField, Tooltip("Delay for show winner")]
+    private float delayForShowWinner = 1.5f;
     private int spawnedFallingObjects = 0;
     public static event Action<CatchLane, bool> OnObjectSpawned;
     private IRemainingFallingObjectCounterUI remainingFallingObjectCounterUI;
@@ -89,6 +93,8 @@ public class FallingObjectSpawner : MonoBehaviour
             float delay = GetScaledValue(spawnDelayStart, spawnDelayEnd);
             yield return new WaitForSeconds(delay);
         }
+        yield return new WaitForSeconds(delayForShowWinner);
+        ScoreManager.Instance.ShowWinnerAndLosers();
     }
 
     private int DetermineSpawnCount()

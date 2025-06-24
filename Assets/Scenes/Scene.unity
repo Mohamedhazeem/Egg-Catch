@@ -2022,7 +2022,8 @@ MonoBehaviour:
   bombSpawnChanceMax: 0.5
   spawnDelayStart: 2
   spawnDelayEnd: 0.8
-  totalFallingObjectsToSpawn: 100
+  totalFallingObjectsToSpawn: 10
+  delayForShowWinner: 1.5
 --- !u!1 &1431087613
 GameObject:
   m_ObjectHideFlags: 0

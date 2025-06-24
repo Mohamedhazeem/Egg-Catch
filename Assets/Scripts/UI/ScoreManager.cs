@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public class ScoreManager : Singleton<ScoreManager>, IScore
 {
@@ -27,12 +28,36 @@ public class ScoreManager : Singleton<ScoreManager>, IScore
 
     public PlayerScore GetScore(PlayerId id) => scores.TryGetValue(id, out var score) ? score : null;
 
-    public void RegisterPlayer(PlayerId playerId, Action<string> onScoreChange)
+    public void RegisterPlayer(PlayerId playerId, Action<string> onScoreChange, ICatchAnimation catchAnimation)
     {
         if (scores.ContainsKey(playerId)) return;
 
-        var score = new PlayerScore(playerId);
+        var score = new PlayerScore(playerId, catchAnimation);
         score.OnScoreChanged += onScoreChange;
         scores.Add(playerId, score);
     }
+    public KeyValuePair<PlayerId, PlayerScore> GetWinner()
+    {
+        return scores
+            .OrderByDescending(pair => pair.Value.Score)
+            .First();
+    }
+
+    public void ShowWinnerAndLosers()
+    {
+        var winner = GetWinner();
+
+        foreach (var pair in scores)
+        {
+            if (pair.Key == winner.Key)
+            {
+                pair.Value.CatchAnimation.PlayWin();
+            }
+            else
+            {
+                pair.Value.CatchAnimation.PlayFail();
+            }
+        }
+    }
+
 }

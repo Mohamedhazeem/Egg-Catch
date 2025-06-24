@@ -10,6 +10,8 @@ public class UIManager : Singleton<UIManager>
         base.Awake();
         if (TryGetComponent(out RemainingFallingObjectUI objectSpawnLeftOverCounterUI))
             RegisterUI(UITypes.ObjectSpawnLeftOverCounterUI, objectSpawnLeftOverCounterUI);
+        if (TryGetComponent(out MenuUI menuUI))
+            RegisterUI(UITypes.MenuUI, menuUI);
     }
     public void RegisterUI(UITypes key, IUIElement uiElement)
     {
@@ -40,5 +42,5 @@ public class UIManager : Singleton<UIManager>
 }
 public enum UITypes
 {
-    ObjectSpawnLeftOverCounterUI
+    ObjectSpawnLeftOverCounterUI, MenuUI
 }

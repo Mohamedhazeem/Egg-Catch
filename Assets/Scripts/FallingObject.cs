@@ -1,6 +1,7 @@
 using UnityEngine;
 using Lean.Pool;
 using DG.Tweening;
+using System.Collections;
 
 public class FallingObject : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class FallingObject : MonoBehaviour
     [SerializeField, Tooltip("Time it takes for the object to move to the catcher after being caught")]
     private float catchMoveDuration = 0.3f;
     public Ease catchEasing = Ease.InOutSine;
-    private bool isCaught = false;
+    private bool isCaught = false, isStun;
     private Transform targetCatchPoint;
 
     [Header("Animation")]
@@ -47,13 +48,15 @@ public class FallingObject : MonoBehaviour
         }
     }
 
-    private void OnCaught(ICatch catchController)
+    private void OnCaught(ICatch catchController, ICatchAnimation catcherAnimation)
     {
         if (isBomb)
+        {
             ScoreManager.Instance.SubtractScore(catchController.GetPlayerId(), 5);
+            catcherAnimation.StunEffect();
+        }
         else
             ScoreManager.Instance.AddScore(catchController.GetPlayerId(), 1);
-        print("called");
 
         LeanPool.Despawn(gameObject);
     }
@@ -69,15 +72,16 @@ public class FallingObject : MonoBehaviour
         if (other.CompareTag("CatchZone"))
         {
             var catcher = other.GetComponentInParent<ICatch>();
-            if (catcher != null && catcher.GetCurrentLane() == fallLane)
+            var catcherAnimation = other.GetComponentInParent<ICatchAnimation>();
+
+            if (catcher != null && catcher.GetCurrentLane() == fallLane && !catcherAnimation.IsStun())
             {
-                print("Caught by player");
                 isCaught = true;
                 targetCatchPoint = catcher.CatchPoint();
                 transform
                     .DOMove(targetCatchPoint.position, catchMoveDuration)
                     .SetEase(catchEasing)
-                    .OnComplete(() => OnCaught(catcher));
+                    .OnComplete(() => OnCaught(catcher, catcherAnimation));
             }
         }
     }

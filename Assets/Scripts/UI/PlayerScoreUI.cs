@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class PlayerScoreUI : MonoBehaviour, IScoreUI
+public class PlayerScoreUI : MonoBehaviour, IPlayerScoreUI
 {
     public GameObject scoreUI;
     public TMP_Text scoreText;
@@ -20,7 +20,6 @@ public class PlayerScoreUI : MonoBehaviour, IScoreUI
 
     public void UpdateScoreText(string value)
     {
-        print("TEXT");
         scoreText.text = value;
     }
 }

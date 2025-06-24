@@ -11,6 +11,7 @@ public class FallingObjectSpawner : MonoBehaviour
     public GameObject bombPrefab;
 
     [Header("Spawn Behavior Settings")]
+    [SerializeField] private float initialSpawnDelay = 1f;
     [Tooltip("Start allowing 2-lane spawns after this many eggs have been spawned")]
     [SerializeField]
     private int enableMultiLaneSpawnAfter = 60;
@@ -29,17 +30,22 @@ public class FallingObjectSpawner : MonoBehaviour
     [SerializeField, Tooltip("Delay between spawns near the end of the game (harder phase)")]
     private float spawnDelayEnd = 0.3f;
 
-    public int totalEggs = 100;
-    private int eggsSpawned = 0;
+    public int totalFallingObjectsToSpawn = 100;
+    private int spawnedFallingObjects = 0;
     public static event Action<CatchLane, bool> OnObjectSpawned;
+    private IRemainingFallingObjectCounterUI remainingFallingObjectCounterUI;
     void Start()
     {
+        remainingFallingObjectCounterUI = UIManager.Instance.GetUI<IRemainingFallingObjectCounterUI>(UITypes.ObjectSpawnLeftOverCounterUI);
+        remainingFallingObjectCounterUI.SetRemainingFallingObjectCounterText(totalFallingObjectsToSpawn.ToString());
         StartCoroutine(SpawnRoutine());
     }
 
     IEnumerator SpawnRoutine()
     {
-        while (eggsSpawned < totalEggs)
+        yield return new WaitForSeconds(initialSpawnDelay);
+
+        while (spawnedFallingObjects < totalFallingObjectsToSpawn)
         {
             int spawnsThisRound = DetermineSpawnCount();
             List<CatchLane> chosenLanes = PickUniqueLanes(spawnsThisRound);
@@ -48,7 +54,7 @@ public class FallingObjectSpawner : MonoBehaviour
             foreach (var lane in chosenLanes)
             {
                 bool isBomb = false;
-                if (!hasSpawnedEgg && eggsSpawned > startSpawningBombsAfter)
+                if (!hasSpawnedEgg && spawnedFallingObjects > startSpawningBombsAfter)
                 {
                     float bombChance = GetScaledValue(bombSpawnChanceMin, bombSpawnChanceMax);
                     isBomb = UnityEngine.Random.value < bombChance;
@@ -58,7 +64,7 @@ public class FallingObjectSpawner : MonoBehaviour
                     isBomb = true;
                 }
 
-                if (eggsSpawned <= startSpawningBombsAfter)
+                if (spawnedFallingObjects <= startSpawningBombsAfter)
                     isBomb = false;
 
                 GameObject prefab = isBomb ? bombPrefab : eggPrefab;
@@ -74,7 +80,8 @@ public class FallingObjectSpawner : MonoBehaviour
 
                 if (!isBomb)
                 {
-                    eggsSpawned++;
+                    ++spawnedFallingObjects;
+                    remainingFallingObjectCounterUI.UpdateRemainingFallingObjectCounterText(RemainingFallingObjects().ToString());
                     hasSpawnedEgg = true;
                 }
             }
@@ -88,7 +95,7 @@ public class FallingObjectSpawner : MonoBehaviour
     {
         float currentMultiLaneChance = GetScaledValue(multiLaneChanceMin, multiLaneChanceMax);
 
-        if (eggsSpawned < enableMultiLaneSpawnAfter)
+        if (spawnedFallingObjects < enableMultiLaneSpawnAfter)
             return 1;
         else
             return UnityEngine.Random.value < currentMultiLaneChance ? 2 : 1;
@@ -109,7 +116,9 @@ public class FallingObjectSpawner : MonoBehaviour
 
         return result;
     }
-    private float GetProgress() => Mathf.Clamp01((float)eggsSpawned / totalEggs);
+    public int RemainingFallingObjects() => totalFallingObjectsToSpawn - spawnedFallingObjects;
+
+    private float GetProgress() => Mathf.Clamp01((float)spawnedFallingObjects / totalFallingObjectsToSpawn);
 
     private float GetScaledValue(float min, float max)
     {
@@ -135,4 +144,4 @@ public class FallingObjectSpawnSet
         }
     }
 }
-public enum CatchLane { None, Left, Middle, Right }
+public enum CatchLane { Left, Middle, Right }

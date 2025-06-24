@@ -14,4 +14,9 @@ public class PlayerCatchInput : MonoBehaviour, ICatchInput
             currentLane = CatchLane.Right;
         return currentLane;
     }
+
+    public void SetLane(CatchLane catchLane)
+    {
+        currentLane = catchLane;
+    }
 }

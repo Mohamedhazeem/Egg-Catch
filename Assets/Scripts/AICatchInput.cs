@@ -62,4 +62,9 @@ public class AICatchInput : MonoBehaviour, ICatchInput
         all.Remove(correctLane);
         return all[Random.Range(0, all.Count)];
     }
+
+    public void SetLane(CatchLane catchLane)
+    {
+        currentLane = catchLane;
+    }
 }

@@ -7,7 +7,13 @@ public interface IScore
     void SubtractScore(PlayerId id, int value);
     PlayerScore GetScore(PlayerId playerId);
 }
-public interface IScoreUI : IUIElement
+public interface IPlayerScoreUI : IUIElement
 {
     void UpdateScoreText(string value);
+}
+public interface IRemainingFallingObjectCounterUI : IUIElement
+{
+    void SetRemainingFallingObjectCounterText(string value);
+    void UpdateRemainingFallingObjectCounterText(string value);
+
 }

@@ -5,15 +5,9 @@ public class ScoreManager : Singleton<ScoreManager>, IScore
 {
     public FallingObjectSpawner fallingObjectSpawner;
     private Dictionary<PlayerId, PlayerScore> scores = new();
-    IScoreUI scoreUI;
     protected override void Awake()
     {
         base.Awake();
-        scoreUI = GetComponentInChildren<IScoreUI>();
-    }
-    void Start()
-    {
-
     }
     public void AddScore(PlayerId id, int value)
     {

@@ -1194,7 +1194,7 @@ GameObject:
   - component: {fileID: 116046443393083221}
   - component: {fileID: 8679219965743261354}
   - component: {fileID: 7662876408036597167}
-  - component: {fileID: 4352290589762879403}
+  - component: {fileID: 7430966976979084858}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -1269,7 +1269,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 116046443393083221}
   leanDampTime: 0.1
---- !u!114 &4352290589762879403
+  stunToIdleDuration: 1
+  isStun: 0
+--- !u!114 &7430966976979084858
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1278,12 +1280,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 4000660292902220308}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6854c4891276d5c4f84a6a7b00f4d8a7, type: 3}
+  m_Script: {fileID: 11500000, guid: 701dfc6fb5c2910419d0b593878cc7fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  catchAccuracy: 0.85
-  catchBombChance: 0.2
-  decisionInterval: 0.25
+  isHuman: 0
 --- !u!1 &4422205762454605602
 GameObject:
   m_ObjectHideFlags: 0

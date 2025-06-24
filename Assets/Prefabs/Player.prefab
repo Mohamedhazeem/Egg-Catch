@@ -363,9 +363,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2672149924921986167}
   - component: {fileID: 1018669496044637860}
-  - component: {fileID: 7011741286691053990}
   - component: {fileID: 8991526245601902888}
   - component: {fileID: 2684761411628106072}
+  - component: {fileID: 2422319343135217111}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -412,18 +412,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &7011741286691053990
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1255755851199634225}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb2129e197055ed46aebb5aa3ebfeebe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &8991526245601902888
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -452,6 +440,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 1018669496044637860}
   leanDampTime: 0.1
+  stunToIdleDuration: 1
+  isStun: 0
+--- !u!114 &2422319343135217111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1255755851199634225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 701dfc6fb5c2910419d0b593878cc7fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isHuman: 1
 --- !u!1 &1443793375372055130
 GameObject:
   m_ObjectHideFlags: 0
@@ -2708,7 +2711,7 @@ PrefabInstance:
     - target: {fileID: 4063696045600021925, guid: d62e025ee2017fe47b90494cff935a1e,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -3.5
+      value: -3.63
       objectReference: {fileID: 0}
     - target: {fileID: 4063696045600021925, guid: d62e025ee2017fe47b90494cff935a1e,
         type: 3}
@@ -2729,6 +2732,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Player Score Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 8604112339953062634, guid: d62e025ee2017fe47b90494cff935a1e,
+        type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

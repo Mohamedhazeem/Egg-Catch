@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
@@ -8,12 +9,10 @@ public class CatcherController : MonoBehaviour, ICatch
 
     private CatchLane currentLane = CatchLane.Middle;
     private ICatchInput input; ICatchAnimation catchAnimation; IPlayerScoreUI scoreUI;
-    private Animator animator;
     public PlayerId playerId;
 
     private void Awake()
     {
-        animator = GetComponent<Animator>();
         input = GetComponent<ICatchInput>();
         catchAnimation = GetComponent<ICatchAnimation>();
         scoreUI = transform.parent.GetComponentInChildren<IPlayerScoreUI>();
@@ -44,4 +43,14 @@ public class CatcherController : MonoBehaviour, ICatch
     public Transform CatchPoint() => catchPoint;
 
     public PlayerId GetPlayerId() => playerId;
+
+    public void SetPlayerId(PlayerId id)
+    {
+        playerId = id;
+    }
+
+    public void AddComponent<T>() where T : Component
+    {
+        gameObject.AddComponent<T>();
+    }
 }

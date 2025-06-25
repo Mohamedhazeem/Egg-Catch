@@ -13,7 +13,7 @@ public class CatcherController : MonoBehaviour, ICatch
 
     private void Awake()
     {
-        input = GetComponent<ICatchInput>();
+        // input = GetComponent<ICatchInput>();
         catchAnimation = GetComponent<ICatchAnimation>();
         scoreUI = transform.parent.GetComponentInChildren<IPlayerScoreUI>();
     }
@@ -25,7 +25,6 @@ public class CatcherController : MonoBehaviour, ICatch
     private void Update()
     {
         if (input == null || catchAnimation.IsStun()) return;
-
         CatchLane newLane = input.GetLaneInput();
         catchAnimation.SetLean(newLane);
 
@@ -52,6 +51,12 @@ public class CatcherController : MonoBehaviour, ICatch
 
     public T AddComponent<T>() where T : Component
     {
-        return gameObject.AddComponent<T>();
+
+        var component = gameObject.AddComponent<T>();
+        if (component is ICatchInput inputComponent)
+        {
+            input = inputComponent;
+        }
+        return component;
     }
 }

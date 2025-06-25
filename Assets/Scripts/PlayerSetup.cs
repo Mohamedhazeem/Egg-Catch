@@ -14,6 +14,7 @@ public class PlayerSetup : MonoBehaviour, IPlayerSetup
         {
             catcher.SetPlayerId(PlayerRegistry.GetNextHumanId());
             catcher.AddComponent<PlayerCatchInput>();
+            catcher.AddComponent<PlayerUIInput>();
         }
         else
         {

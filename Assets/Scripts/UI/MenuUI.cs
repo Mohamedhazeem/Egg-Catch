@@ -12,11 +12,21 @@ public class MenuUI : MonoBehaviour, IMenuUI
     public Color unmuteButtonColor;
     private Image muteButonImage;
     private bool isMute = false;
+    [Header("Close")]
     public Button closeButton;
+    [Header("Quit")]
+    public Button quitButton;
+    public Color quitButtonColor;
+
+
     void Start()
     {
         menuUIButton.onClick.AddListener(Show);
         closeButton.onClick.AddListener(Hide);
+
+        quitButton.onClick.AddListener(Quit);
+        quitButton.GetComponent<Image>().color = quitButtonColor;
+
         muteToggleButton.onClick.AddListener(ToggleMute);
         muteButonImage = muteToggleButton.GetComponent<Image>();
         muteButonImage.color = unmuteButtonColor;
@@ -53,5 +63,9 @@ public class MenuUI : MonoBehaviour, IMenuUI
             muteButonImage.color = muteButtonColor;
         else
             muteButonImage.color = unmuteButtonColor;
+    }
+    private void Quit()
+    {
+        Application.Quit();
     }
 }

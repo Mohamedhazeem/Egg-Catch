@@ -2601,10 +2601,7 @@ MonoBehaviour:
   - left: {fileID: 58012591}
     middle: {fileID: 58012590}
     right: {fileID: 58012589}
-  eggPrefab: {fileID: 4043653372582419500, guid: e0874cdedb6ea0649acc9ba1f270fba7,
-    type: 3}
-  bombPrefab: {fileID: 6913044778244994499, guid: 8976f0e4a5de67941abc2b082634356d,
-    type: 3}
+  prefabProviderSource: {fileID: 2137138543}
   initialSpawnDelay: 1
   enableMultiLaneSpawnAfter: 40
   multiLaneChanceMin: 0.2
@@ -3485,6 +3482,60 @@ Transform:
   - {fileID: 1081946094}
   m_Father: {fileID: 1068653820}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2137138542
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2137138544}
+  - component: {fileID: 2137138543}
+  m_Layer: 0
+  m_Name: Prefab Provider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2137138543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2137138542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a196a7fccf2b4ab41ab8a38495f5876b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eggReference:
+    m_AssetGUID: e0874cdedb6ea0649acc9ba1f270fba7
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  bombReference:
+    m_AssetGUID: 8976f0e4a5de67941abc2b082634356d
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+--- !u!4 &2137138544
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2137138542}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 314, y: 219.52238, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &233057958460111038 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1073786198595319437, guid: f26bd93ed75af8747b259b4107ddd9f0,
@@ -3564,3 +3615,4 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1068653820}
+  - {fileID: 2137138544}

@@ -7,8 +7,11 @@ using UnityEngine;
 public class FallingObjectSpawner : MonoBehaviour
 {
     public List<FallingObjectSpawnSet> fallingObjectSpawnSets;
-    public GameObject eggPrefab;
-    public GameObject bombPrefab;
+    [SerializeField] private MonoBehaviour prefabProviderSource;
+    private IPrefabProvider prefabProvider;
+    private GameObject cachedEggPrefab;
+    private GameObject cachedBombPrefab;
+
 
     [Header("Spawn Behavior Settings")]
     [SerializeField] private float initialSpawnDelay = 1f;
@@ -38,8 +41,19 @@ public class FallingObjectSpawner : MonoBehaviour
     private int spawnedFallingObjects = 0;
     public static event Action<CatchLane, bool> OnObjectSpawned;
     private IRemainingFallingObjectCounterUI remainingFallingObjectCounterUI;
-    void Start()
+    async void Start()
     {
+        prefabProvider = prefabProviderSource as IPrefabProvider;
+
+        if (prefabProvider == null)
+        {
+            Debug.LogError("Prefab Provider is not set or doesn't implement IPrefabProvider.");
+            return;
+        }
+
+        cachedEggPrefab = await prefabProvider.LoadEggAsync();
+        cachedBombPrefab = await prefabProvider.LoadBombAsync();
+
         remainingFallingObjectCounterUI = UIManager.Instance.GetUI<IRemainingFallingObjectCounterUI>(UITypes.ObjectSpawnLeftOverCounterUI);
         remainingFallingObjectCounterUI.SetRemainingFallingObjectCounterText(totalFallingObjectsToSpawn.ToString());
         StartCoroutine(SpawnRoutine());
@@ -71,7 +85,7 @@ public class FallingObjectSpawner : MonoBehaviour
                 if (spawnedFallingObjects <= startSpawningBombsAfter)
                     isBomb = false;
 
-                GameObject prefab = isBomb ? bombPrefab : eggPrefab;
+                GameObject prefab = isBomb ? cachedBombPrefab : cachedEggPrefab;
                 OnObjectSpawned?.Invoke(lane, isBomb);
 
                 foreach (var spawnSet in fallingObjectSpawnSets)

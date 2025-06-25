@@ -4,11 +4,11 @@ public class PlayerSetup : MonoBehaviour
 {
     [SerializeField] private bool isHuman = false;
     private ICatch catcher;
-    public AIDataScriptableObject[] AIDatas;
-    private void Awake()
+    private AddressableAIDataLoader aiDataLoader;
+    private async void Awake()
     {
-        if (catcher == null)
-            catcher = GetComponent<ICatch>();
+        gameObject.TryGetComponent(out aiDataLoader);
+        catcher ??= GetComponent<ICatch>();
 
         if (isHuman)
         {
@@ -19,8 +19,11 @@ public class PlayerSetup : MonoBehaviour
         {
             catcher.SetPlayerId(PlayerRegistry.GetNextAIId());
             var aiInput = catcher.AddComponent<AICatchInput>();
-            AIDataScriptableObject randomData = AIDatas[Random.Range(0, AIDatas.Length)];
-            aiInput.Initialize(randomData);
+            if (aiDataLoader)
+            {
+                await aiDataLoader.LoadAllAIDatasAsync();
+                aiInput.Initialize(aiDataLoader.GetRandomAI());
+            }
         }
     }
 }

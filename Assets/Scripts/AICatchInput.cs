@@ -32,6 +32,8 @@ public class AICatchInput : MonoBehaviour, ICatchInput
 
     public CatchLane GetLaneInput()
     {
+        if (AIData == null)
+            return CatchLane.Middle;
         decisionTimer += Time.deltaTime;
 
         if (decisionTimer >= AIData.decisionInterval && laneQueue.Count > 0)

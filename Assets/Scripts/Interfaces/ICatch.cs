@@ -7,4 +7,5 @@ public interface ICatch : IComponent
     Transform CatchPoint();
     PlayerId GetPlayerId();
     void SetPlayerId(PlayerId id);
+
 }

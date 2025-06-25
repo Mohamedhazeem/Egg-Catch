@@ -8,7 +8,7 @@ public class CatcherAnimationController : MonoBehaviour, ICatchAnimation
     [Tooltip("Time it takes to transition from the stun animation back to idle.")]
     public float stunToIdleDuration = 1f;
     [HideInInspector] public bool isStun;
-    private ICatchInput catchInput;
+    internal ICatchInput catchInput;
     private bool isHuman;
     void Start()
     {
@@ -62,4 +62,6 @@ public class CatcherAnimationController : MonoBehaviour, ICatchAnimation
         animator.SetTrigger("Idle");
     }
     public bool IsStun() => isStun;
+
+    public void SetInput(ICatchInput catchInput) => this.catchInput = catchInput;
 }

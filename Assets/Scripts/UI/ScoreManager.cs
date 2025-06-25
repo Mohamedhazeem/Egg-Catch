@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 public class ScoreManager : Singleton<ScoreManager>, IScore
 {
@@ -38,11 +37,21 @@ public class ScoreManager : Singleton<ScoreManager>, IScore
     }
     public KeyValuePair<PlayerId, PlayerScore> GetWinner()
     {
-        return scores
-            .OrderByDescending(pair => pair.Value.Score)
-            .First();
-    }
+        PlayerId winnerId = default;
+        PlayerScore winnerScore = null;
+        int highest = int.MinValue;
 
+        foreach (var pair in scores)
+        {
+            if (pair.Value.Score > highest)
+            {
+                highest = pair.Value.Score;
+                winnerId = pair.Key;
+                winnerScore = pair.Value;
+            }
+        }
+        return new KeyValuePair<PlayerId, PlayerScore>(winnerId, winnerScore);
+    }
     public void ShowWinnerAndLosers()
     {
         var winner = GetWinner();

@@ -56,6 +56,7 @@ public class CatcherController : MonoBehaviour, ICatch
         if (component is ICatchInput inputComponent)
         {
             input = inputComponent;
+            catchAnimation.SetInput(input);
         }
         return component;
     }

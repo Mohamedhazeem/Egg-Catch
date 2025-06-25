@@ -1,6 +1,6 @@
 using System.Collections;
 
-public interface ICatchAnimation
+public interface ICatchAnimation : IInput
 {
     void SetLean(CatchLane lane);
     void PlayWin();

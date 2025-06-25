@@ -44,9 +44,12 @@ public class PlayerManager : MonoBehaviour
     {
         var obj = Instantiate(cachedPlayerPrefab, spawnPoint.position, spawnPoint.rotation, transform);
         bool isHuman = id.ToString().StartsWith("Player");
-        var playerSetup = obj.GetComponentInChildren<IPlayerSetup>();
-        playerSetup.SetAsHuman(isHuman);
-        var controller = obj.GetComponentInChildren<CatcherController>();
+        var playerSetup = obj.GetComponentsInChildren<IPlayerSetup>();
+        foreach (var item in playerSetup)
+        {
+            item.SetAsHuman(isHuman);
+        }
+        var controller = obj.GetComponentInChildren<ICatch>();
         controller.SetPlayerId(id);
     }
 }

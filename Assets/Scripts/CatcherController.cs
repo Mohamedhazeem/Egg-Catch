@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
-public class CatcherController : MonoBehaviour, ICatch
+public class CatcherController : MonoBehaviour, ICatch, IPlayerSetup
 {
     [Header("Catcher Settings")]
     [SerializeField] private Transform catchPoint; // Reference to CatchPoint near stomach in Pokenman
@@ -10,7 +10,7 @@ public class CatcherController : MonoBehaviour, ICatch
     private CatchLane currentLane = CatchLane.Middle;
     private ICatchInput input; ICatchAnimation catchAnimation; IPlayerScoreUI scoreUI;
     public PlayerId playerId;
-
+    private bool isHuman;
     private void Awake()
     {
         // input = GetComponent<ICatchInput>();
@@ -60,4 +60,8 @@ public class CatcherController : MonoBehaviour, ICatch
         }
         return component;
     }
+
+    public void SetAsHuman(bool isHuman) => this.isHuman = isHuman;
+
+    public bool IsHuman() => isHuman;
 }

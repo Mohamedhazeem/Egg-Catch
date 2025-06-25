@@ -10,11 +10,6 @@ public class CatcherAnimationController : MonoBehaviour, ICatchAnimation
     [HideInInspector] public bool isStun;
     internal ICatchInput catchInput;
     private bool isHuman;
-    void Start()
-    {
-        catchInput = GetComponent<ICatchInput>();
-        isHuman = catchInput is PlayerCatchInput;
-    }
     private float GetLeanValue(CatchLane lane)
     {
         return lane == CatchLane.Left ? -1f :
@@ -27,6 +22,7 @@ public class CatcherAnimationController : MonoBehaviour, ICatchAnimation
 
     public void PlayWin()
     {
+        isHuman = catchInput is PlayerCatchInput;
         if (isHuman)
         {
             SoundManager.Instance.Play(SFXType.Win);
@@ -36,6 +32,7 @@ public class CatcherAnimationController : MonoBehaviour, ICatchAnimation
 
     public void PlayFail()
     {
+        isHuman = catchInput is PlayerCatchInput;
         if (isHuman)
         {
             SoundManager.Instance.Play(SFXType.Fail);

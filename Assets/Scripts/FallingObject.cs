@@ -50,15 +50,16 @@ public class FallingObject : MonoBehaviour
 
     private void OnCaught(ICatch catchController, ICatchAnimation catcherAnimation)
     {
+        bool isHuman = catchController is IPlayerSetup setup && setup.IsHuman();
         if (isBomb)
         {
-            SoundManager.Instance.Play(SFXType.Bomb);
+            if (isHuman) SoundManager.Instance.Play(SFXType.Bomb);
             ScoreManager.Instance.SubtractScore(catchController.GetPlayerId(), 5);
             catcherAnimation.StunEffect();
         }
         else
         {
-            SoundManager.Instance.Play(SFXType.Catch);
+            if (isHuman) SoundManager.Instance.Play(SFXType.Catch);
             ScoreManager.Instance.AddScore(catchController.GetPlayerId(), 1);
         }
         LeanPool.Despawn(gameObject);

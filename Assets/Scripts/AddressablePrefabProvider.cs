@@ -5,6 +5,7 @@ using UnityEngine.AddressableAssets;
 public class AddressablePrefabProvider : MonoBehaviour, IPrefabProvider
 {
     [Header("Assign Addressable Prefabs in Inspector")]
+    public AssetReference playerReference;
     public AssetReference eggReference;
     public AssetReference bombReference;
 
@@ -16,5 +17,9 @@ public class AddressablePrefabProvider : MonoBehaviour, IPrefabProvider
     public async Task<GameObject> LoadBombAsync()
     {
         return await bombReference.LoadAssetAsync<GameObject>().Task;
+    }
+    public async Task<GameObject> LoadPlayerAsync()
+    {
+        return await playerReference.LoadAssetAsync<GameObject>().Task;
     }
 }

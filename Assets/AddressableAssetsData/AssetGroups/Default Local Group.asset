@@ -40,6 +40,11 @@ MonoBehaviour:
     m_SerializedLabels:
     - AI_Configs
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b32a5d7373e40484aa737f3dddefb452
+    m_Address: Assets/Prefabs/Player.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e0874cdedb6ea0649acc9ba1f270fba7
     m_Address: Assets/Prefabs/Egg.prefab
     m_ReadOnly: 0

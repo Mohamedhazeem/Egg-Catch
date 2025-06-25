@@ -5,4 +5,5 @@ public interface IPrefabProvider
 {
     Task<GameObject> LoadEggAsync();
     Task<GameObject> LoadBombAsync();
+    Task<GameObject> LoadPlayerAsync();
 }

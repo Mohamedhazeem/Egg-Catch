@@ -120,7 +120,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fallLane: 0
-  fallSpeed: 4.5
+  fallSpeed: 7
   despawnY: -6
   isBomb: 1
   catchMoveDuration: 0.3

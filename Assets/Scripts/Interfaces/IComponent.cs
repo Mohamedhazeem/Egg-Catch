@@ -2,5 +2,5 @@ using UnityEngine;
 
 public interface IComponent
 {
-    void AddComponent<T>() where T : Component;
+    T AddComponent<T>() where T : Component;
 }

@@ -3,8 +3,8 @@ using UnityEngine;
 public class PlayerSetup : MonoBehaviour
 {
     [SerializeField] private bool isHuman = false;
-    [SerializeField] private ICatch catcher;
-
+    private ICatch catcher;
+    public AIDataScriptableObject[] AIDatas;
     private void Awake()
     {
         if (catcher == null)
@@ -18,7 +18,9 @@ public class PlayerSetup : MonoBehaviour
         else
         {
             catcher.SetPlayerId(PlayerRegistry.GetNextAIId());
-            catcher.AddComponent<AICatchInput>();
+            var aiInput = catcher.AddComponent<AICatchInput>();
+            AIDataScriptableObject randomData = AIDatas[Random.Range(0, AIDatas.Length)];
+            aiInput.Initialize(randomData);
         }
     }
 }

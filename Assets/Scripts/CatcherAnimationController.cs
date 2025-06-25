@@ -9,9 +9,11 @@ public class CatcherAnimationController : MonoBehaviour, ICatchAnimation
     public float stunToIdleDuration = 1f;
     [HideInInspector] public bool isStun;
     private ICatchInput catchInput;
+    private bool isHuman;
     void Start()
     {
         catchInput = GetComponent<ICatchInput>();
+        isHuman = catchInput is PlayerCatchInput;
     }
     private float GetLeanValue(CatchLane lane)
     {
@@ -25,11 +27,19 @@ public class CatcherAnimationController : MonoBehaviour, ICatchAnimation
 
     public void PlayWin()
     {
+        if (isHuman)
+        {
+            SoundManager.Instance.Play(SFXType.Win);
+        }
         animator.SetTrigger("Win");
     }
 
     public void PlayFail()
     {
+        if (isHuman)
+        {
+            SoundManager.Instance.Play(SFXType.Fail);
+        }
         animator.SetTrigger("Fail");
     }
 

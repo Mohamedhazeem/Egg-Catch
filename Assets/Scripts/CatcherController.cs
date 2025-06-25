@@ -50,8 +50,8 @@ public class CatcherController : MonoBehaviour, ICatch
         playerId = id;
     }
 
-    public void AddComponent<T>() where T : Component
+    public T AddComponent<T>() where T : Component
     {
-        gameObject.AddComponent<T>();
+        return gameObject.AddComponent<T>();
     }
 }

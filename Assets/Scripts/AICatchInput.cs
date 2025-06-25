@@ -5,20 +5,13 @@ public class AICatchInput : MonoBehaviour, ICatchInput
 {
     private CatchLane currentLane = CatchLane.Middle;
     private Queue<CatchLane> laneQueue = new();
-
     [Header("AI Behavior")]
-    [SerializeField, Range(0f, 1f), Tooltip("Probability that AI will choose the lane with the egg.")]
-    private float catchAccuracy = 0.85f;
-
-    [SerializeField, Range(0f, 1f), Tooltip("Chance that the AI will catch a bomb instead of avoiding it.")]
-    private float catchBombChance = 0.2f;
-
-    [SerializeField, Tooltip("Time interval (in seconds) between AI lane decision.")]
-    private float decisionInterval = 0.25f;
-
-
+    public AIDataScriptableObject AIData;
     private float decisionTimer;
-
+    public void Initialize(AIDataScriptableObject AIData)
+    {
+        this.AIData = AIData;
+    }
     private void OnEnable()
     {
         FallingObjectSpawner.OnObjectSpawned += OnObjectSpawned;
@@ -31,7 +24,7 @@ public class AICatchInput : MonoBehaviour, ICatchInput
 
     private void OnObjectSpawned(CatchLane lane, bool isBomb)
     {
-        if (!isBomb || Random.value < catchBombChance)
+        if (!isBomb || Random.value < AIData.catchBombChance)
         {
             laneQueue.Enqueue(lane);
         }
@@ -41,12 +34,12 @@ public class AICatchInput : MonoBehaviour, ICatchInput
     {
         decisionTimer += Time.deltaTime;
 
-        if (decisionTimer >= decisionInterval && laneQueue.Count > 0)
+        if (decisionTimer >= AIData.decisionInterval && laneQueue.Count > 0)
         {
             decisionTimer = 0f;
 
             CatchLane target = laneQueue.Dequeue();
-            bool willCatchCorrect = Random.value < catchAccuracy;
+            bool willCatchCorrect = Random.value < AIData.catchAccuracy;
 
             currentLane = willCatchCorrect
                 ? target

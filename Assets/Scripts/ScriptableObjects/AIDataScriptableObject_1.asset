@@ -12,6 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da4a027b9bd2e1d4ba78a921dfc2bfea, type: 3}
   m_Name: AIDataScriptableObject_1
   m_EditorClassIdentifier: 
-  catchAccuracy: 0.85
-  catchBombChance: 0.2
-  decisionInterval: 0.1
+  catchAccuracy: 0.7
+  catchBombChance: 0.3

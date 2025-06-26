@@ -13,13 +13,15 @@ public class PlayerSetup : MonoBehaviour, IPlayerSetup
         if (isHuman)
         {
             catcher.SetPlayerId(PlayerRegistry.GetNextHumanId());
-            catcher.AddComponent<PlayerCatchInput>();
+            var input = catcher.AddComponent<PlayerCatchInput>();
+            PlayerManager.Instance.SetPlayerComponentsData(input, catcher);
             catcher.AddComponent<PlayerUIInput>();
         }
         else
         {
             catcher.SetPlayerId(PlayerRegistry.GetNextAIId());
             var aiInput = catcher.AddComponent<AICatchInput>();
+            PlayerManager.Instance.SetPlayerComponentsData(aiInput, catcher);
             if (aiDataLoader)
             {
                 await aiDataLoader.LoadAllAIDatasAsync();

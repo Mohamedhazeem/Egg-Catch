@@ -1,15 +1,19 @@
 
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : Singleton<PlayerManager>
 {
     [SerializeField] private MonoBehaviour prefabProviderSource;
     private IPrefabProvider prefabProvider;
     private GameObject cachedPlayerPrefab;
     [SerializeField] private Transform[] spawnPoints;
-    async void Awake()
+    public List<PlayerComponentsData> playerComponentsDatas = new();
+    private int spawnedPlayers = 0;
+    protected override async void Awake()
     {
+        base.Awake();
         prefabProvider = prefabProviderSource as IPrefabProvider;
 
         if (prefabProvider == null)
@@ -38,8 +42,6 @@ public class PlayerManager : MonoBehaviour
             }
         }
     }
-
-
     void SpawnPlayer(PlayerId id, Transform spawnPoint)
     {
         var obj = Instantiate(cachedPlayerPrefab, spawnPoint.position, spawnPoint.rotation, transform);
@@ -52,4 +54,33 @@ public class PlayerManager : MonoBehaviour
         var controller = obj.GetComponentInChildren<ICatch>();
         controller.SetPlayerId(id);
     }
+    public (ICatchInput input, ICatch catcher) GetPlayerComponentsData(int index)
+    {
+        var data = playerComponentsDatas[index];
+        return (data.catchInput, data.catcher);
+    }
+
+
+    public void SetPlayerComponentsData(ICatchInput catchInput, ICatch catcher)
+    {
+        PlayerComponentsData data = new PlayerComponentsData
+        {
+            catchInput = catchInput,
+            catcher = catcher
+        };
+
+        playerComponentsDatas.Add(data);
+        spawnedPlayers++;
+    }
+
+    public int GetSpawnPointCount()
+    {
+        return spawnPoints.Length;
+    }
+    public bool AreAllPlayersReady() => spawnedPlayers >= spawnPoints.Length;
+}
+public struct PlayerComponentsData
+{
+    public ICatchInput catchInput;
+    public ICatch catcher;
 }

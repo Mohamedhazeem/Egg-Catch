@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   catchAccuracy: 0.85
   catchBombChance: 0.2
-  decisionInterval: 0.25
+  decisionInterval: 0.1

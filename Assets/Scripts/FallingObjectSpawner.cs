@@ -7,6 +7,7 @@ using UnityEngine;
 public class FallingObjectSpawner : MonoBehaviour
 {
     public List<FallingObjectSpawnSet> fallingObjectSpawnSets;
+    private List<FallingObjectSpawnSet> activeSpawnSets = new();
     [SerializeField] private MonoBehaviour prefabProviderSource;
     private IPrefabProvider prefabProvider;
     private GameObject cachedEggPrefab;
@@ -39,7 +40,8 @@ public class FallingObjectSpawner : MonoBehaviour
     [SerializeField, Tooltip("Delay for show winner")]
     private float delayForShowWinner = 1.5f;
     private int spawnedFallingObjects = 0;
-    public static event Action<CatchLane, bool> OnObjectSpawned;
+    public static event Action<List<(CatchLane lane, bool isBomb)>> OnObjectsSpawnedGroup;
+
     private IRemainingFallingObjectCounterUI remainingFallingObjectCounterUI;
     async void Start()
     {
@@ -56,6 +58,23 @@ public class FallingObjectSpawner : MonoBehaviour
 
         remainingFallingObjectCounterUI = UIManager.Instance.GetUI<IRemainingFallingObjectCounterUI>(UITypes.ObjectSpawnLeftOverCounterUI);
         remainingFallingObjectCounterUI.SetRemainingFallingObjectCounterText(totalFallingObjectsToSpawn.ToString());
+
+        int playerCount = PlayerManager.Instance.GetSpawnPointCount();
+
+        if (playerCount > fallingObjectSpawnSets.Count)
+        {
+            Debug.Log("Not enough spawn sets for number of players.");
+            playerCount = fallingObjectSpawnSets.Count;
+        }
+
+        activeSpawnSets = fallingObjectSpawnSets.GetRange(0, playerCount);
+        StartCoroutine(WaitForPlayersAndSpawn());
+    }
+    IEnumerator WaitForPlayersAndSpawn()
+    {
+        while (!PlayerManager.Instance.AreAllPlayersReady())
+            yield return null;
+
         StartCoroutine(SpawnRoutine());
     }
 
@@ -68,7 +87,7 @@ public class FallingObjectSpawner : MonoBehaviour
             int spawnsThisRound = DetermineSpawnCount();
             List<CatchLane> chosenLanes = PickUniqueLanes(spawnsThisRound);
             bool hasSpawnedEgg = false;
-
+            List<(CatchLane lane, bool isBomb)> spawnGroup = new();
             foreach (var lane in chosenLanes)
             {
                 bool isBomb = false;
@@ -86,14 +105,18 @@ public class FallingObjectSpawner : MonoBehaviour
                     isBomb = false;
 
                 GameObject prefab = isBomb ? cachedBombPrefab : cachedEggPrefab;
-                OnObjectSpawned?.Invoke(lane, isBomb);
+                spawnGroup.Add((lane, isBomb));
 
-                foreach (var spawnSet in fallingObjectSpawnSets)
+                for (int i = 0; i < activeSpawnSets.Count; i++)
                 {
-                    Transform spawnPoint = spawnSet.GetLane(lane);
+                    Transform spawnPoint = activeSpawnSets[i].GetLane(lane);
                     GameObject obj = LeanPool.Spawn(prefab, spawnPoint.position, Quaternion.identity);
+                    var (input, catcher) = PlayerManager.Instance.GetPlayerComponentsData(i);
                     if (obj.TryGetComponent<FallingObject>(out var falling))
+                    {
                         falling.fallLane = lane;
+                        falling.SetCatchInput(input, catcher);
+                    }
                 }
 
                 if (!isBomb)
@@ -103,7 +126,7 @@ public class FallingObjectSpawner : MonoBehaviour
                     hasSpawnedEgg = true;
                 }
             }
-
+            OnObjectsSpawnedGroup?.Invoke(spawnGroup);
             float delay = GetScaledValue(spawnDelayStart, spawnDelayEnd);
             yield return new WaitForSeconds(delay);
         }

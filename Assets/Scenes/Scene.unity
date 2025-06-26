@@ -2561,15 +2561,15 @@ MonoBehaviour:
     right: {fileID: 58012589}
   prefabProviderSource: {fileID: 2137138543}
   initialSpawnDelay: 1
-  enableMultiLaneSpawnAfter: 40
-  multiLaneChanceMin: 0.2
-  multiLaneChanceMax: 0.6
+  enableMultiLaneSpawnAfter: 3
+  multiLaneChanceMin: 0.6
+  multiLaneChanceMax: 0.3
   startSpawningBombsAfter: 3
-  bombSpawnChanceMin: 0.25
-  bombSpawnChanceMax: 0.5
+  bombSpawnChanceMin: 0.05
+  bombSpawnChanceMax: 0.1
   spawnDelayStart: 0.8
   spawnDelayEnd: 0.4
-  totalFallingObjectsToSpawn: 10
+  totalFallingObjectsToSpawn: 50
   delayForShowWinner: 1.5
 --- !u!1 &1414598308
 GameObject:
@@ -3755,8 +3755,6 @@ MonoBehaviour:
   spawnPoints:
   - {fileID: 1023067088}
   - {fileID: 1954665396}
-  - {fileID: 53799085}
-  - {fileID: 379371254}
 --- !u!1 &2137138542
 GameObject:
   m_ObjectHideFlags: 0

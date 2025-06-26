@@ -10,6 +10,4 @@ public class AIDataScriptableObject : ScriptableObject
     [Range(0f, 1f), Tooltip("Chance that the AI will catch a bomb instead of avoiding it.")]
     public float catchBombChance = 0.2f;
 
-    [Tooltip("Time interval (in seconds) between AI lane decision.")]
-    public float decisionInterval = 0.25f;
 }

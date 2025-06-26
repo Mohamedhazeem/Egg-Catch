@@ -15,6 +15,10 @@ public class PlayerCatchInput : MonoBehaviour, ICatchInput
         return currentLane;
     }
 
+    public void ResetLaneCommitment()
+    {
+    }
+
     public void SetLane(CatchLane catchLane)
     {
         currentLane = catchLane;

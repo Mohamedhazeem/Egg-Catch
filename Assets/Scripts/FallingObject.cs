@@ -15,7 +15,7 @@ public class FallingObject : MonoBehaviour
     [SerializeField, Tooltip("Time it takes for the object to move to the catcher after being caught")]
     private float catchMoveDuration = 0.3f;
     public Ease catchEasing = Ease.InOutSine;
-    private bool isCaught = false, isStun;
+    private bool isCaught = false;
     private Transform targetCatchPoint;
 
     [Header("Animation")]
@@ -25,6 +25,7 @@ public class FallingObject : MonoBehaviour
     public LoopType loopType = LoopType.Incremental;
 
     private Tween rotationTween;
+    ICatchInput catcherInput; ICatch catcher;
     void OnEnable()
     {
         if (isAnimate)
@@ -41,6 +42,12 @@ public class FallingObject : MonoBehaviour
         {
             transform.position += Vector3.down * fallSpeed * Time.deltaTime;
 
+            // if (catcherInput != null && targetCatchPoint != null && transform.position.y < targetCatchPoint.position.y)
+            // {
+            //     catcherInput.ResetLaneCommitment();
+            //     catcherInput = null;
+            // }
+
             if (transform.position.y < despawnY)
             {
                 DespawnSelf();
@@ -48,9 +55,11 @@ public class FallingObject : MonoBehaviour
         }
     }
 
-    private void OnCaught(ICatch catchController, ICatchAnimation catcherAnimation)
+    private void OnCaught(ICatch catchController, ICatchInput catcherInput, ICatchAnimation catcherAnimation)
     {
         bool isHuman = catchController is IPlayerSetup setup && setup.IsHuman();
+        catcherInput?.ResetLaneCommitment();
+
         if (isBomb)
         {
             if (isHuman) SoundManager.Instance.Play(SFXType.Bomb);
@@ -75,9 +84,7 @@ public class FallingObject : MonoBehaviour
         if (isCaught) return;
         if (other.CompareTag("CatchZone"))
         {
-            var catcher = other.GetComponentInParent<ICatch>();
             var catcherAnimation = other.GetComponentInParent<ICatchAnimation>();
-
             if (catcher != null && catcher.GetCurrentLane() == fallLane && !catcherAnimation.IsStun())
             {
                 isCaught = true;
@@ -85,16 +92,22 @@ public class FallingObject : MonoBehaviour
                 transform
                     .DOMove(targetCatchPoint.position, catchMoveDuration)
                     .SetEase(catchEasing)
-                    .OnComplete(() => OnCaught(catcher, catcherAnimation));
+                    .OnComplete(() => OnCaught(catcher, catcherInput, catcherAnimation));
             }
         }
     }
 
-
+    public void SetCatchInput(ICatchInput catcherInput, ICatch catcher)
+    {
+        this.catcherInput = catcherInput;
+        this.catcher = catcher;
+        targetCatchPoint = catcher.CatchPoint();
+    }
     void OnDisable()
     {
         rotationTween?.Kill();
         isCaught = false;
         targetCatchPoint = null;
+        catcherInput = null;
     }
 }

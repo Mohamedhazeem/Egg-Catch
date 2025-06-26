@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: AIDataScriptableObject_2
   m_EditorClassIdentifier: 
   catchAccuracy: 0.9
-  catchBombChance: 0.3
+  catchBombChance: 0.2
   decisionInterval: 0.1
